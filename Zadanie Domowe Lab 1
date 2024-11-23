@@ -1,0 +1,109 @@
+Zad. 18. Napisz program wyznaczający N początkowych liczby pierwszych. Wartość N podawana jest z konsoli. 
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        // Wczytanie liczby N od użytkownika
+        System.out.print("Podaj liczbę N (ilość liczb do wylosowania): ");
+        int N = scanner.nextInt();
+
+        // Lista do przechowywania wylosowanych liczb
+        ArrayList<Integer> liczby = new ArrayList<>();
+
+        // Losowanie liczb i dodawanie ich do listy
+        for (int i = 0; i < N; i++) {
+            int liczba = random.nextInt(1000) + 1; // Liczby z przedziału 1-1000
+            liczby.add(liczba);
+        }
+
+        // Wyświetlenie wylosowanych liczb
+        System.out.println("Wylosowane liczby: " + liczby);
+
+        // Znalezienie wartości najmniejszej i największej
+        int min = Collections.min(liczby);
+        int max = Collections.max(liczby);
+
+        // Wyświetlenie wyników
+        System.out.println("Najmniejsza liczba: " + min);
+        System.out.println("Największa liczba: " + max);
+    }
+}
+
+Wyjaśnienie kodu:
+
+Importy:
+
+java.util.ArrayList:   Używane do przechowywania listy wylosowanych liczb.
+java.util.Collections: Używane do łatwego znalezienia wartości minimalnej i maksymalnej.
+java.util.Random:      Do generowania losowych liczb.
+java.util.Scanner:     Do wczytywania danych od użytkownika.
+Losowanie liczb:
+
+Metoda random.nextInt(1000) + 1 losuje liczby z przedziału 1–1000.
+Liczby są przechowywane w liście.
+Znalezienie minimum i maksimum:
+
+Collections.min(liczby) zwraca najmniejszą wartość z listy.
+Collections.max(liczby) zwraca największą wartość z listy.
+Wynik:
+
+Program wyświetla wszystkie wylosowane liczby oraz wartości najmniejszą i największą.
+
+
+
+Zad. 19 Napisz program, który wylosuje N liczb naturalnych z przedziału 1-1000, wyświetli je na konsoli i znajdzie w nich wartość najmniejszą oraz największą. Liczba N wprowadzona jest przez użytkownia.
+
+mport java.util.Random;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+
+        // Wczytanie liczby N od użytkownika
+        System.out.print("Podaj liczbę N (ilość liczb do wylosowania): ");
+        int N = scanner.nextInt();
+
+        // Sprawdzenie poprawności liczby N
+        if (N <= 0) {
+            System.out.println("Liczba N musi być większa od 0.");
+            return;
+        }
+
+        // Tablica do przechowywania wylosowanych liczb
+        int[] liczby = new int[N];
+
+        // Zmienna do przechowywania najmniejszej i największej wartości
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+
+        // Losowanie liczb i znajdowanie min/max za pomocą pętli while
+        int i = 0; // Indeks
+        System.out.println("Wylosowane liczby:");
+        while (i < N) {
+            int liczba = random.nextInt(1000) + 1; // Liczba z przedziału 1-1000
+            liczby[i] = liczba;
+
+            // Wyświetlanie liczby
+            System.out.print(liczba + " ");
+
+            // Aktualizacja min i max
+            if (liczba < min) min = liczba;
+            if (liczba > max) max = liczba;
+
+            i++;
+        }
+
+        // Wynik
+        System.out.println("\nNajmniejsza liczba: " + min);
+        System.out.println("Największa liczba: " + max);
+    }
+}
