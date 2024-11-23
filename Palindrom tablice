@@ -1,0 +1,20 @@
+public class Main {
+    public static void main(String[] args) {
+
+        char[] tekst = {'o', 'k', 'o', ' ', 'w', ' ', 'o', 'k', 'o'};
+        char[] tekst2 = {'p', 'o', 'm', 'i', 'd', 'o', 'r'};
+        boolean result = true;
+        for (int i = 0; i < tekst.length/2; i++) {
+            if (tekst[i] != tekst[tekst.length - 1 - i]) {
+                result = false;
+                break;
+            }
+        }
+        System.out.println("Czy 'oko w oko' to palindrom: " + result);
+        for (int i = 0; i < tekst.length / 2; i++) {
+            if (tekst2[i] != tekst[tekst.length - 1 - i]) {
+                result = false;
+                break;
+            }
+        }
+        System.out.println("Czy 'Pomidor' to palindrom: " + result);
