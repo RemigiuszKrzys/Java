@@ -107,3 +107,36 @@ public class Main {
         System.out.println("Największa liczba: " + max);
     }
 }
+
+Zadanie 20. Napisz program, który wyświetli na konsoli następujący wzór, dla zadanego parametru N, określającego liczbę wierszy do wyświetlenia.
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Wczytanie liczby N od użytkownika
+        System.out.print("Podaj liczbę wierszy (N): ");
+        int N = scanner.nextInt();
+
+        // Generowanie trójkąta gwiazdek
+        for (int i = 1; i <= N; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print("*");
+            }
+            System.out.println(); // Przejście do nowego wiersza
+        }
+    }
+}
+
+Wyjaśnienie:
+Wartość N = 2:
+
+Zewnętrzna pętla for (int i = 1; i <= N; i++) wykonuje się 2 razy (dla wierszy).
+W pierwszym przebiegu wewnętrzna pętla wypisuje 1 gwiazdkę.
+W drugim przebiegu wypisuje 2 gwiazdki.
+System.out.println:
+
+Po zakończeniu wewnętrznej pętli dla każdego wiersza przechodzi do nowej linii.
+
