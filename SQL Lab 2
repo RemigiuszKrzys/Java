@@ -1,0 +1,515 @@
+Tworzenie przykładowych tabel w SQL:
+
+CREATE TABLE Klienci (
+    ID_Klienta INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL
+);
+
+CREATE TABLE Zamowienia (
+    ID_Zamowienia INT PRIMARY KEY AUTO_INCREMENT,
+    Data DATE NOT NULL,
+    ID_Klienta INT NOT NULL,
+    FOREIGN KEY (ID_Klienta) REFERENCES Klienci(ID_Klienta)
+);
+
+CREATE TABLE Produkty (
+    ID_Produktu INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa VARCHAR(100) NOT NULL,
+    Cena DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE Zamowienia_Produkty (
+    ID_Zamowienia INT NOT NULL,
+    ID_Produktu INT NOT NULL,
+    Ilosc INT NOT NULL,
+    PRIMARY KEY (ID_Zamowienia, ID_Produktu),
+    FOREIGN KEY (ID_Zamowienia) REFERENCES Zamowienia(ID_Zamowienia),
+    FOREIGN KEY (ID_Produktu) REFERENCES Produkty(ID_Produktu)
+);
+
+Zadanie Laboratoria 2:
+
+Zadanie 1: 
+
+-- Tabela Klienci
+CREATE TABLE Klienci (
+    ID_Klienta INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Telefon VARCHAR(15)
+);
+
+-- Tabela Piloci
+CREATE TABLE Piloci (
+    ID_Pilota INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Telefon VARCHAR(15),
+    Email VARCHAR(100) UNIQUE
+);
+
+-- Tabela Trasy
+CREATE TABLE Trasy (
+    ID_Trasy INT PRIMARY KEY AUTO_INCREMENT,
+    Opis_Trasy TEXT NOT NULL
+);
+
+Przykład wypełnienia bazy danych:
+
+-- Dodanie klientów
+INSERT INTO Klienci (Imie, Nazwisko, Email, Telefon)
+VALUES ('Jan', 'Kowalski', 'jan.kowalski@example.com', '123456789'),
+       ('Anna', 'Nowak', 'anna.nowak@example.com', '987654321');
+
+-- Dodanie pilotów
+INSERT INTO Piloci (Imie, Nazwisko, Telefon, Email)
+VALUES ('Marek', 'Wiśniewski', '456123789', 'marek.wisniewski@example.com');
+
+-- Dodanie tras
+INSERT INTO Trasy (Opis_Trasy)
+VALUES ('Zwiedzanie Paryża i okolic'),
+       ('Wycieczka po Tatrach');
+
+-- Dodanie środków lokomocji
+INSERT INTO Srodki_Lokomocji (Rodzaj)
+VALUES ('Autokar'), ('Samolot'), ('Dojazd własny');
+
+-- Dodanie wycieczki
+INSERT INTO Wycieczki (ID_Trasy, ID_Srodka, Data_Wycieczki, Koszt, Liczba_Miejsc, ID_Pilota)
+VALUES (1, 2, '2024-07-15', 2500.00, 30, 1);
+
+-- Dodanie uczestników wycieczki
+INSERT INTO Uczestnicy_Wycieczek (ID_Wycieczki, ID_Klienta)
+VALUES (1, 1), (1, 2);
+
+
+-- Tabela Srodki Lokomocji
+CREATE TABLE Srodki_Lokomocji (
+    ID_Srodka INT PRIMARY KEY AUTO_INCREMENT,
+    Rodzaj VARCHAR(50) NOT NULL -- np. "autokar", "samolot", "dojazd własny"
+);
+
+-- Tabela Wycieczki
+CREATE TABLE Wycieczki (
+    ID_Wycieczki INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Trasy INT NOT NULL,
+    ID_Srodka INT NOT NULL,
+    Data_Wycieczki DATE NOT NULL,
+    Koszt DECIMAL(10, 2) NOT NULL,
+    Liczba_Miejsc INT NOT NULL,
+    ID_Pilota INT NOT NULL,
+    FOREIGN KEY (ID_Trasy) REFERENCES Trasy(ID_Trasy),
+    FOREIGN KEY (ID_Srodka) REFERENCES Srodki_Lokomocji(ID_Srodka),
+    FOREIGN KEY (ID_Pilota) REFERENCES Piloci(ID_Pilota)
+);
+
+-- Tabela Uczestnicy Wycieczek
+CREATE TABLE Uczestnicy_Wycieczek (
+    ID_Wycieczki INT NOT NULL,
+    ID_Klienta INT NOT NULL,
+    PRIMARY KEY (ID_Wycieczki, ID_Klienta),
+    FOREIGN KEY (ID_Wycieczki) REFERENCES Wycieczki(ID_Wycieczki),
+    FOREIGN KEY (ID_Klienta) REFERENCES Klienci(ID_Klienta)
+);
+
+
+Zadanie 2:
+
+-- Tabela Towarzystwa Ubezpieczeniowe (TU)
+CREATE TABLE Towarzystwa_Ubezpieczeniowe (
+    Kod_TU INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa_TU VARCHAR(100) NOT NULL
+);
+
+-- Tabela Produkty Ubezpieczeniowe (PU)
+CREATE TABLE Produkty_Ubezpieczeniowe (
+    Kod_PU INT PRIMARY KEY AUTO_INCREMENT,
+    Opis_PU TEXT NOT NULL,
+    Kod_TU INT NOT NULL,
+    FOREIGN KEY (Kod_TU) REFERENCES Towarzystwa_Ubezpieczeniowe(Kod_TU)
+);
+
+-- Tabela Agenci
+CREATE TABLE Agenci (
+    Kod_Agenta INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Adres VARCHAR(200)
+);
+
+-- Tabela Klienci
+CREATE TABLE Klienci (
+    ID_Klienta INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) UNIQUE
+);
+
+-- Tabela Polisy
+CREATE TABLE Polisy (
+    Nr_Polisy INT PRIMARY KEY AUTO_INCREMENT,
+    Kod_PU INT NOT NULL,
+    ID_Klienta INT NOT NULL,
+    Kod_Agenta INT NOT NULL,
+    Wysokosc_Ubezpieczenia DECIMAL(10, 2) NOT NULL,
+    Data_Wystawienia DATE NOT NULL,
+    FOREIGN KEY (Kod_PU) REFERENCES Produkty_Ubezpieczeniowe(Kod_PU),
+    FOREIGN KEY (ID_Klienta) REFERENCES Klienci(ID_Klienta),
+    FOREIGN KEY (Kod_Agenta) REFERENCES Agenci(Kod_Agenta)
+);
+
+-- Tabela Składki
+CREATE TABLE Skladki (
+    Nr_Skladki INT PRIMARY KEY AUTO_INCREMENT,
+    Nr_Polisy INT NOT NULL,
+    Kwota_Wplaty DECIMAL(10, 2) NOT NULL,
+    Data_Wplaty DATE NOT NULL,
+    FOREIGN KEY (Nr_Polisy) REFERENCES Polisy(Nr_Polisy)
+);
+
+-- Tabela Uprawnienia Agentów do sprzedaży PU
+CREATE TABLE Uprawnienia_Agentow (
+    Kod_Agenta INT NOT NULL,
+    Kod_PU INT NOT NULL,
+    PRIMARY KEY (Kod_Agenta, Kod_PU),
+    FOREIGN KEY (Kod_Agenta) REFERENCES Agenci(Kod_Agenta),
+    FOREIGN KEY (Kod_PU) REFERENCES Produkty_Ubezpieczeniowe(Kod_PU)
+);
+
+Wypełnienie bazy danych:
+
+-- Dodanie Towarzystw Ubezpieczeniowych
+INSERT INTO Towarzystwa_Ubezpieczeniowe (Nazwa_TU)
+VALUES ('TU Alfa'), ('TU Beta');
+
+-- Dodanie Produktów Ubezpieczeniowych
+INSERT INTO Produkty_Ubezpieczeniowe (Opis_PU, Kod_TU)
+VALUES ('Ubezpieczenie samochodu', 1),
+       ('Ubezpieczenie mieszkania', 2);
+
+-- Dodanie Agentów
+INSERT INTO Agenci (Nazwisko, Adres)
+VALUES ('Kowalski', 'ul. Główna 12, Warszawa'),
+       ('Nowak', 'ul. Leśna 8, Kraków');
+
+-- Dodanie Klientów
+INSERT INTO Klienci (Imie, Nazwisko, Email)
+VALUES ('Jan', 'Kowalski', 'jan.kowalski@example.com'),
+       ('Anna', 'Nowak', 'anna.nowak@example.com');
+
+-- Dodanie Uprawnień Agentów
+INSERT INTO Uprawnienia_Agentow (Kod_Agenta, Kod_PU)
+VALUES (1, 1), (2, 2);
+
+-- Dodanie Polis
+INSERT INTO Polisy (Kod_PU, ID_Klienta, Kod_Agenta, Wysokosc_Ubezpieczenia, Data_Wystawienia)
+VALUES (1, 1, 1, 10000.00, '2024-01-15'),
+       (2, 2, 2, 50000.00, '2024-01-20');
+
+-- Dodanie Składek
+INSERT INTO Skladki (Nr_Polisy, Kwota_Wplaty, Data_Wplaty)
+VALUES (1, 200.00, '2024-02-01'),
+       (1, 200.00, '2024-03-01'),
+       (2, 500.00, '2024-02-10');
+
+Zadanie 3:
+
+-- Tabela Klienci
+CREATE TABLE Klienci (
+    ID_Klienta INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Adres VARCHAR(100),
+    Pesel CHAR(11) UNIQUE NOT NULL
+);
+
+-- Tabela Samochody
+CREATE TABLE Samochody (
+    ID_Samochodu INT PRIMARY KEY AUTO_INCREMENT,
+    Marka VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Nr_Silnika VARCHAR(50) NOT NULL,
+    Nr_Rejestracji VARCHAR(15) UNIQUE NOT NULL,
+    ID_Klienta INT NOT NULL,
+    FOREIGN KEY (ID_Klienta) REFERENCES Klienci(ID_Klienta)
+);
+
+-- Tabela Pracownicy
+CREATE TABLE Pracownicy (
+    ID_Pracownika INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Adres VARCHAR(100),
+    Pesel CHAR(11) UNIQUE NOT NULL,
+    Data_Zatrudnienia DATE NOT NULL
+);
+
+-- Tabela Naprawy
+CREATE TABLE Naprawy (
+    ID_Naprawy INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Samochodu INT NOT NULL,
+    ID_Pracownika_Odpowiedzialnego INT NOT NULL,
+    Kwota_Zaplaty DECIMAL(10, 2),
+    Data_Oddania DATE NOT NULL,
+    Data_Odbioru DATE,
+    FOREIGN KEY (ID_Samochodu) REFERENCES Samochody(ID_Samochodu),
+    FOREIGN KEY (ID_Pracownika_Odpowiedzialnego) REFERENCES Pracownicy(ID_Pracownika)
+);
+
+-- Tabela Czynności
+CREATE TABLE Czynnosci (
+    ID_Czynnosci INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa VARCHAR(50) NOT NULL,
+    Opis TEXT,
+    Czas_Wykonania DECIMAL(5, 2) -- czas w godzinach
+);
+
+-- Tabela Pracownicy_Czynności
+CREATE TABLE Pracownicy_Czynnosci (
+    ID_Czynnosci INT NOT NULL,
+    ID_Pracownika INT NOT NULL,
+    PRIMARY KEY (ID_Czynnosci, ID_Pracownika),
+    FOREIGN KEY (ID_Czynnosci) REFERENCES Czynnosci(ID_Czynnosci),
+    FOREIGN KEY (ID_Pracownika) REFERENCES Pracownicy(ID_Pracownika)
+);
+
+-- Tabela Naprawy_Czynności
+CREATE TABLE Naprawy_Czynnosci (
+    ID_Naprawy INT NOT NULL,
+    ID_Czynnosci INT NOT NULL,
+    PRIMARY KEY (ID_Naprawy, ID_Czynnosci),
+    FOREIGN KEY (ID_Naprawy) REFERENCES Naprawy(ID_Naprawy),
+    FOREIGN KEY (ID_Czynnosci) REFERENCES Czynnosci(ID_Czynnosci)
+);
+
+Przykład wypełnienia bazy danych:
+
+-- Dodanie Klientów
+INSERT INTO Klienci (Nazwisko, Adres, Pesel)
+VALUES ('Kowalski', 'ul. Główna 12, Warszawa', '12345678901'),
+       ('Nowak', 'ul. Leśna 8, Kraków', '98765432109');
+
+-- Dodanie Samochodów
+INSERT INTO Samochody (Marka, Model, Nr_Silnika, Nr_Rejestracji, ID_Klienta)
+VALUES ('Toyota', 'Corolla', '123ABC456', 'WAW12345', 1),
+       ('Ford', 'Focus', '987XYZ654', 'KRK54321', 2);
+
+-- Dodanie Pracowników
+INSERT INTO Pracownicy (Nazwisko, Adres, Pesel, Data_Zatrudnienia)
+VALUES ('Kowalski', 'ul. Mechaników 5, Warszawa', '11122233344', '2022-01-01'),
+       ('Nowak', 'ul. Naprawcza 10, Kraków', '55566677788', '2023-06-15');
+
+-- Dodanie Naprawy
+INSERT INTO Naprawy (ID_Samochodu, ID_Pracownika_Odpowiedzialnego, Kwota_Zaplaty, Data_Oddania, Data_Odbioru)
+VALUES (1, 1, 1200.00, '2024-02-01', '2024-02-10');
+
+-- Dodanie Czynności
+INSERT INTO Czynnosci (Nazwa, Opis, Czas_Wykonania)
+VALUES ('Wymiana oleju', 'Wymiana oleju silnikowego', 1.5),
+       ('Naprawa hamulców', 'Naprawa i wymiana klocków hamulcowych', 2.0);
+
+-- Powiązanie Pracowników z Czynnościami
+INSERT INTO Pracownicy_Czynnosci (ID_Czynnosci, ID_Pracownika)
+VALUES (1, 1), (2, 2);
+
+-- Powiązanie Naprawy z Czynnościami
+INSERT INTO Naprawy_Czynnosci (ID_Naprawy, ID_Czynnosci)
+VALUES (1, 1), (1, 2);
+
+Zadanie 4:
+
+-- Tabela Pacjenci
+CREATE TABLE Pacjenci (
+    ID_Pacjenta INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Adres VARCHAR(100),
+    ID_Lekarza_Rodzinnego INT NOT NULL,
+    FOREIGN KEY (ID_Lekarza_Rodzinnego) REFERENCES Lekarze(ID_Lekarza)
+);
+
+-- Tabela Lekarze
+CREATE TABLE Lekarze (
+    ID_Lekarza INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL
+);
+
+-- Tabela Wizyty
+CREATE TABLE Wizyty (
+    ID_Wizyty INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Pacjenta INT NOT NULL,
+    ID_Lekarza INT NOT NULL,
+    Data_Wizyty DATE NOT NULL,
+    FOREIGN KEY (ID_Pacjenta) REFERENCES Pacjenci(ID_Pacjenta),
+    FOREIGN KEY (ID_Lekarza) REFERENCES Lekarze(ID_Lekarza)
+);
+
+-- Tabela Jednostki Chorobowe
+CREATE TABLE Jednostki_Chorobowe (
+    Nr_Jednostki INT PRIMARY KEY AUTO_INCREMENT,
+    Opis VARCHAR(255) NOT NULL
+);
+
+-- Tabela Wizyty_Jednostki_Chorobowe
+CREATE TABLE Wizyty_Jednostki_Chorobowe (
+    ID_Wizyty INT NOT NULL,
+    Nr_Jednostki INT NOT NULL,
+    PRIMARY KEY (ID_Wizyty, Nr_Jednostki),
+    FOREIGN KEY (ID_Wizyty) REFERENCES Wizyty(ID_Wizyty),
+    FOREIGN KEY (Nr_Jednostki) REFERENCES Jednostki_Chorobowe(Nr_Jednostki)
+);
+
+-- Tabela Leki
+CREATE TABLE Leki (
+    Kod_Leku INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa VARCHAR(100) NOT NULL
+);
+
+-- Tabela Leki_Wizyty
+CREATE TABLE Leki_Wizyty (
+    ID_Wizyty INT NOT NULL,
+    Kod_Leku INT NOT NULL,
+    Dawkowanie TEXT NOT NULL, -- szczegóły dawkowania: ile i jak często
+    PRIMARY KEY (ID_Wizyty, Kod_Leku),
+    FOREIGN KEY (ID_Wizyty) REFERENCES Wizyty(ID_Wizyty),
+    FOREIGN KEY (Kod_Leku) REFERENCES Leki(Kod_Leku)
+);
+
+Przykład wypełnienia bazy danych:
+
+-- Dodanie Lekarzy
+INSERT INTO Lekarze (Imie, Nazwisko)
+VALUES ('Jan', 'Kowalski'),
+       ('Anna', 'Nowak');
+
+-- Dodanie Pacjentów
+INSERT INTO Pacjenci (Imie, Nazwisko, Adres, ID_Lekarza_Rodzinnego)
+VALUES ('Marek', 'Zieliński', 'ul. Główna 10, Warszawa', 1),
+       ('Ewa', 'Kowalczyk', 'ul. Leśna 5, Kraków', 2);
+
+-- Dodanie Wizyt
+INSERT INTO Wizyty (ID_Pacjenta, ID_Lekarza, Data_Wizyty)
+VALUES (1, 1, '2024-03-01'),
+       (2, 2, '2024-03-02');
+
+-- Dodanie Jednostek Chorobowych
+INSERT INTO Jednostki_Chorobowe (Opis)
+VALUES ('Grypa'),
+       ('Nadciśnienie');
+
+-- Powiązanie Wizyt z Jednostkami Chorobowymi
+INSERT INTO Wizyty_Jednostki_Chorobowe (ID_Wizyty, Nr_Jednostki)
+VALUES (1, 1), (2, 2);
+
+-- Dodanie Leków
+INSERT INTO Leki (Nazwa)
+VALUES ('Paracetamol'),
+       ('Aspiryna');
+
+-- Powiązanie Leków z Wizytami
+INSERT INTO Leki_Wizyty (ID_Wizyty, Kod_Leku, Dawkowanie)
+VALUES (1, 1, '1 tabletka co 8 godzin'),
+       (2, 2, '2 tabletki co 12 godzin');
+
+Zadanie 5:
+
+-- Tabela Programy
+CREATE TABLE Programy (
+    ID_Programu INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa VARCHAR(100) NOT NULL,
+    Czas_Trwania TIME NOT NULL
+);
+
+-- Tabela Osoby
+CREATE TABLE Osoby (
+    ID_Osoby INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL
+);
+
+-- Tabela Funkcje
+CREATE TABLE Funkcje (
+    ID_Funkcji INT PRIMARY KEY AUTO_INCREMENT,
+    Nazwa VARCHAR(50) NOT NULL,
+    Stawka_Min DECIMAL(10, 2) NOT NULL,
+    Stawka_Max DECIMAL(10, 2) NOT NULL
+);
+
+-- Tabela Osoby_Programy
+CREATE TABLE Osoby_Programy (
+    ID_Programu INT NOT NULL,
+    ID_Osoby INT NOT NULL,
+    ID_Funkcji INT NOT NULL,
+    Stawka_Godzinowa DECIMAL(10, 2) NOT NULL,
+    Liczba_Godzin INT NOT NULL,
+    PRIMARY KEY (ID_Programu, ID_Osoby, ID_Funkcji),
+    FOREIGN KEY (ID_Programu) REFERENCES Programy(ID_Programu),
+    FOREIGN KEY (ID_Osoby) REFERENCES Osoby(ID_Osoby),
+    FOREIGN KEY (ID_Funkcji) REFERENCES Funkcje(ID_Funkcji)
+);
+
+-- Tabela Goście
+CREATE TABLE Goscie (
+    ID_Goscia INT PRIMARY KEY AUTO_INCREMENT,
+    Imie VARCHAR(50) NOT NULL,
+    Nazwisko VARCHAR(50) NOT NULL,
+    Adres VARCHAR(100) NOT NULL
+);
+
+-- Tabela Zaproszenia
+CREATE TABLE Zaproszenia (
+    ID_Programu INT NOT NULL,
+    ID_Goscia INT NOT NULL,
+    PRIMARY KEY (ID_Programu, ID_Goscia),
+    FOREIGN KEY (ID_Programu) REFERENCES Programy(ID_Programu),
+    FOREIGN KEY (ID_Goscia) REFERENCES Goscie(ID_Goscia)
+);
+
+-- Tabela Emisje
+CREATE TABLE Emisje (
+    ID_Emisji INT PRIMARY KEY AUTO_INCREMENT,
+    ID_Programu INT NOT NULL,
+    Kanal VARCHAR(50) NOT NULL,
+    Data DATE NOT NULL,
+    Godzina TIME NOT NULL,
+    FOREIGN KEY (ID_Programu) REFERENCES Programy(ID_Programu)
+);
+Przykład wypełnienia baz danych:
+
+-- Dodanie Programów
+INSERT INTO Programy (Nazwa, Czas_Trwania)
+VALUES ('Wieczór z Gwiazdami', '01:30:00'),
+       ('Poranek na Luzie', '01:00:00');
+
+-- Dodanie Osób
+INSERT INTO Osoby (Imie, Nazwisko)
+VALUES ('Anna', 'Kowalska'),
+       ('Jan', 'Nowak');
+
+-- Dodanie Funkcji
+INSERT INTO Funkcje (Nazwa, Stawka_Min, Stawka_Max)
+VALUES ('Prowadzący', 100.00, 300.00),
+       ('Realizator', 80.00, 200.00);
+
+-- Powiązanie Osób z Programami i Funkcjami
+INSERT INTO Osoby_Programy (ID_Programu, ID_Osoby, ID_Funkcji, Stawka_Godzinowa, Liczba_Godzin)
+VALUES (1, 1, 1, 250.00, 5),
+       (1, 2, 2, 150.00, 4);
+
+-- Dodanie Gości
+INSERT INTO Goscie (Imie, Nazwisko, Adres)
+VALUES ('Maria', 'Nowicka', 'ul. Zielona 10, Warszawa'),
+       ('Tomasz', 'Kowalczyk', 'ul. Leśna 5, Kraków');
+
+-- Powiązanie Gości z Programami
+INSERT INTO Zaproszenia (ID_Programu, ID_Goscia)
+VALUES (1, 1),
+       (1, 2);
+
+-- Dodanie Emisji Programów
+INSERT INTO Emisje (ID_Programu, Kanal, Data, Godzina)
+VALUES (1, 'TVP1', '2024-12-01', '20:00:00'),
+       (1, 'TVP1', '2024-12-02', '22:00:00'),
+       (2, 'TVP2', '2024-12-03', '09:00:00');
+
